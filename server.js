@@ -18,7 +18,7 @@ async function startVenomBot() {
     try {
       venomClient = await venom.create({
         session: 'sessionname',
-        headless: true,
+        headless: 'new',
         logQR: false,
         browserArgs: ['--no-sandbox', '--disable-setuid-sandbox'],
       }).then((client) => {
