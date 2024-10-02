@@ -18,29 +18,27 @@ async function startVenomBot() {
     try {
         venomClient = await venom.create({
             session: 'sessionname',
-            headless: 'new',
+            headless: 'new',  // Using the 'new' headless mode
             logQR: false,
             browserArgs: ['--no-sandbox', '--disable-setuid-sandbox'],
-        }).then((client) => {
-            venomClient = client;
-            console.log('Venom Bot started');
+        });
 
-            // Listen for QR code generation
-            client.on('qr', (qr) => {
-                console.log('Generated QR Code');
-                qrCode = qr; // Store the QR code
-            });
+        console.log('Venom Bot started');
 
-            // Listen for state changes
-            client.onStateChange((state) => {
-                console.log('Connection state:', state);
-            });
+        // Listen for QR code generation
+        venomClient.on('qr', (qr) => {
+            console.log('Generated QR Code');
+            qrCode = qr; // Store the QR code
+        });
+
+        // Listen for state changes
+        venomClient.onStateChange((state) => {
+            console.log('Connection state:', state);
         });
 
     } catch (err) {
         console.error('Error starting Venom Bot:', err);
 
-        // Check if err.message exists and then check for ERR_CONNECTION_REFUSED
         const errorMessage = err && err.message ? err.message : 'Unknown error';
 
         if (errorMessage.includes('ERR_CONNECTION_REFUSED') && retries < maxRetries) {
